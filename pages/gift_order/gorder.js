@@ -1,11 +1,17 @@
 // pages/gift_order/gorder.js
+//获取应用实例
+const app = getApp()
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-  
+    provinceName: 'CN',
+    contactInfo: {},
+    hasContactInfo: false,
+    canIUse: wx.canIUse('button.open-type.getContactInfo')
   },
 
   /**
@@ -16,14 +22,25 @@ Page({
       wx.chooseAddress({
         success: function (res) {
           console.log(JSON.stringify(res))
+          console.log(res.userName)
+          console.log(res.postalCode)
+          console.log(res.provinceName)
+          console.log(res.cityName)
+          console.log(res.countyName)
+          console.log(res.detailInfo)
+          console.log(res.nationalCode)
+          console.log(res.telNumber)
+          this.setData({
+            contactInfo: res,
+            hasContactInfo: true
+          })
         },
         fail: function (err) {
           console.log(JSON.stringify(err))
         }
       })
-      alert("test");
     } else {
-      alert('当前微信版本太低');
+      console.log('当前微信版本太低');
     }
   },
 
@@ -38,7 +55,22 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+    if (hasContactInfo) {
+      console.log(JSON.stringify(err))
+      wx.request({
+        url: 'https://139.159.227.105', //仅为示例，并非真实的接口地址
+        data: {
+          x: this.contactInfo.userName,
+          y: this.contactInfo.provinceName
+        },
+        header: {
+          'content-type': 'application/json' // 默认值
+        },
+        success: function (res) {
+          console.log(res.data)
+        }
+      })
+    }
   },
 
   /**
